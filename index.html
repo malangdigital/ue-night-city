@@ -32,6 +32,8 @@
             color: var(--light-grey);
             overflow-x: hidden;
             overscroll-behavior-y: none;
+            /* Tambahkan tinggi minimum berbasis svh */
+            min-height: 100svh;
         }
 
         /* Container Pembungkus Layar HP */
@@ -39,7 +41,7 @@
             max-width: 480px;
             margin: 0 auto;
             position: relative;
-            min-height: 100vh;
+            min-height: 100svh;
             background-color: var(--dark-blue);
             box-shadow: 0 0 50px rgba(0,0,0,0.8);
             overflow: hidden;
@@ -86,19 +88,20 @@
 
         /* ==================== COVER SECTION ==================== */
         #cover-section {
-            position: absolute; 
-            top: 0; left: 0; width: 100%; height: 100vh;
+            /* Ubah dari absolute ke fixed agar menutupi layar penuh layaknya aplikasi */
+            position: fixed; 
+            top: 0; left: 0; width: 100%; 
+            height: 100svh; /* Menggunakan svh agar pas di layar mobile dan atasi address bar */
             background: linear-gradient(180deg, rgba(10, 25, 47, 0.4) 0%, rgba(10, 25, 47, 0.7) 100%), 
                         url('assets/bg-cover.webp') center/cover no-repeat;
             display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center;
             padding: 50px 20px 40px 20px; z-index: 999;
-            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+            transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1), opacity 1.2s ease;
         }
-        #cover-section.slide-up { transform: translateY(-100%); }
-
-        .cover-top .subtitle {
-            font-family: 'Cinzel', serif; font-size: 0.85rem; letter-spacing: 4px;
-            color: var(--light-grey); text-transform: uppercase;
+        #cover-section.slide-up { 
+            transform: translateY(-100%); 
+            opacity: 0;
+            pointer-events: none;
         }
 
         .frame-oval {
