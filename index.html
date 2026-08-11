@@ -26,13 +26,20 @@
             box-sizing: border-box;
         }
 
+        /* Mengunci body ala referensi agar address bar mobile langsung tersembunyi */
+        body.locked {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: #0f1115;
             color: var(--light-grey);
             overflow-x: hidden;
             overscroll-behavior-y: none;
-            /* Tambahkan tinggi minimum berbasis svh */
             min-height: 100svh;
         }
 
@@ -88,10 +95,13 @@
 
         /* ==================== COVER SECTION ==================== */
         #cover-section {
-            /* Ubah dari absolute ke fixed agar menutupi layar penuh layaknya aplikasi */
+            /* Menggunakan fixed dan height 100% agar otomatis merangkul layar penuh dan menyembunyikan address bar */
             position: fixed; 
-            top: 0; left: 0; width: 100%; 
-            height: 100svh; /* Menggunakan svh agar pas di layar mobile dan atasi address bar */
+            top: 0; left: 0; right: 0; bottom: 0;
+            width: 100%; 
+            height: 100%; 
+            max-width: 480px;
+            margin: 0 auto;
             background: linear-gradient(180deg, rgba(10, 25, 47, 0.4) 0%, rgba(10, 25, 47, 0.7) 100%), 
                         url('assets/bg-cover.webp') center/cover no-repeat;
             display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center;
@@ -582,7 +592,7 @@
         }
     </style>
 </head>
-<body>
+<body class="locked">
 
     <audio id="bgMusic" loop preload="auto">
         <source src="assets/music.mp3" type="audio/mpeg">
@@ -1128,8 +1138,10 @@
                 console.log("Autoplay ditahan browser:", err);
             });
 
+            // Lepas class locked dari body agar halaman bisa di-scroll secara normal
+            document.body.classList.remove('locked');
+
             cover.classList.add('slide-up');
-            document.body.style.overflowY = 'auto';
 
             setTimeout(() => { gapuraWrapper.classList.add('step-move-back'); }, 600);
             setTimeout(() => { curtainContainer.classList.add('open'); }, 1400);
@@ -1455,7 +1467,6 @@
         }, flowerObserverOptions);
 
         document.addEventListener('DOMContentLoaded', () => {
-            document.body.style.overflowY = 'hidden';
             loadWishes();
             
             const sections = [
