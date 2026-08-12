@@ -1119,10 +1119,6 @@
             const gapuraWrapper = document.getElementById('gapuraWrapper');
             const heroPage = document.getElementById('heroPage');
 
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen().catch(() => {});
-            }
-
             musicBtn.classList.add('visible');
 
             bgMusic.play().then(() => {
