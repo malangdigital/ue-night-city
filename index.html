@@ -26,14 +26,21 @@
             box-sizing: border-box;
         }
 
-        /* Mengizinkan halaman bisa digeser/swipe secara alami agar address bar mobile bisa naik */
         html, body {
             width: 100%;
-            min-height: 100%;
+            height: 100%;
             background-color: #0f1115;
             color: var(--light-grey);
             font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
+        }
+
+        /* Ketika status awal terkunci, body tidak bisa di-scroll */
+        body.locked {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
         }
 
         /* Container Pembungkus Layar HP */
@@ -88,11 +95,10 @@
 
         /* ==================== COVER SECTION ==================== */
         #cover-section {
-            /* Menggunakan absolute dan min-height 100% agar halaman cover bisa di-swipe ke atas secara leluasa */
             position: absolute; 
-            top: 0; left: 0; right: 0;
+            inset: 0;
             width: 100%; 
-            min-height: 100vh; 
+            height: 100%; 
             max-width: 480px;
             margin: 0 auto;
             background: linear-gradient(180deg, rgba(10, 25, 47, 0.4) 0%, rgba(10, 25, 47, 0.7) 100%), 
@@ -100,6 +106,7 @@
             display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center;
             padding: 50px 20px 40px 20px; z-index: 999;
             transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1), opacity 1.2s ease;
+            overflow-y: auto; /* Memungkinkan swipe/geser untuk menghilangkan address bar */
         }
         #cover-section.slide-up { 
             transform: translateY(-100%); 
@@ -585,7 +592,7 @@
         }
     </style>
 </head>
-<body>
+<body class="locked">
 
     <audio id="bgMusic" loop preload="auto">
         <source src="assets/music.mp3" type="audio/mpeg">
@@ -1129,6 +1136,9 @@
             }).catch(err => {
                 console.log("Autoplay ditahan browser:", err);
             });
+
+            // Lepas kuncian bodi agar halaman utama bisa di-scroll setelah tombol diklik
+            document.body.classList.remove('locked');
 
             cover.classList.add('slide-up');
 
