@@ -34,7 +34,7 @@
             overflow-x: hidden;
             overscroll-behavior-y: none;
             min-height: 100vh;
-            min-height: 100dvh; /* dvh agar pas dengan dinamika layar mobile */
+            min-height: 100dvh;
         }
 
         /* Container Pembungkus Layar HP */
@@ -89,10 +89,10 @@
 
         /* ==================== COVER SECTION ==================== */
         #cover-section {
-            position: fixed; 
+            position: absolute; 
             top: 0; left: 0; width: 100%; 
-            height: 100%; /* Mengikuti tinggi viewport secara penuh */
-            height: 100dvh;
+            min-height: 100vh;
+            min-height: 100dvh;
             background: linear-gradient(180deg, rgba(10, 25, 47, 0.4) 0%, rgba(10, 25, 47, 0.7) 100%), 
                         url('assets/bg-cover.webp') center/cover no-repeat;
             display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center;
@@ -1078,13 +1078,12 @@
     <script>
         // ================= KONFIGURASI SCRIPT =================
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbw2nm3MUmuHIW7Wc3l9WmWISQA-uB4SMXPSydOUd_ydcT-IsX1hGW1YERL49zK0b7Nbug/exec';
-        const WA_NUMBER = '6287123456789'; // Ganti dengan nomor WhatsApp Anda (format internasional tanpa tanda +)
+        const WA_NUMBER = '6287123456789';
         // =======================================================
 
         if (history.scrollRestoration) {
             history.scrollRestoration = 'manual';
         }
-        window.scrollTo(0, 1);
 
         // 1. FITUR CUSTOM NAMA TAMU (?to=)
         const guestParam = new URLSearchParams(window.location.search).get('to');
@@ -1120,7 +1119,6 @@
             const gapuraWrapper = document.getElementById('gapuraWrapper');
             const heroPage = document.getElementById('heroPage');
 
-            // Minta Fullscreen API jika didukung perangkat (opsional untuk menyembunyikan total)
             if (document.documentElement.requestFullscreen) {
                 document.documentElement.requestFullscreen().catch(() => {});
             }
@@ -1136,11 +1134,9 @@
             });
 
             cover.classList.add('slide-up');
-            document.body.style.overflowY = 'auto';
 
-            // Paksa browser scroll 1px ke bawah saat cover terbuka agar address bar terdorong tersembunyi
             setTimeout(() => {
-            window.scrollTo(0, 0);
+                window.scrollTo(0, 0);
             }, 100);
 
             setTimeout(() => { gapuraWrapper.classList.add('step-move-back'); }, 600);
@@ -1264,7 +1260,6 @@
 
         // ================= FITUR RSVP & GOOGLE SHEETS =================
 
-        // Otomatis set jumlah saat "Tidak Hadir" dipilih
         document.getElementById('rsvpKonfirmasi').addEventListener('change', function() {
             const jumlahSelect = document.getElementById('rsvpJumlah');
             if (this.value === 'Tidak Hadir') {
@@ -1276,7 +1271,6 @@
             }
         });
 
-        // Menampilkan ucapan ke dalam DOM
         function addWishToDOM(data) {
             const wishesList = document.getElementById('wishesList');
             const loadingText = wishesList.querySelector('p');
@@ -1288,7 +1282,6 @@
             const badgeClass = isHadir ? 'hadir' : 'absen';
             const statusText = isHadir ? 'Hadir' : 'Tidak Hadir';
 
-            // Fitur Balasan dari Mempelai (Kolom F di Sheet)
             const balasanHTML = data.balasan ? `
                 <div class="reply-box">
                     <div class="reply-title">
@@ -1312,7 +1305,6 @@
             wishesList.insertBefore(wishCard, wishesList.firstChild);
         }
 
-        // Load ucapan dari GAS (GET)
         async function loadWishes() {
             const wishesList = document.getElementById('wishesList');
             wishesList.innerHTML = "<p style='font-size: 0.8rem; color: #64748B; text-align: center; font-style: italic;'>Memuat ucapan...</p>";
@@ -1333,7 +1325,6 @@
             }
         }
 
-        // Submit RSVP (POST)
         document.getElementById('rsvpSubmit').addEventListener('click', async function() {
             const nama = document.getElementById('rsvpNama').value.trim();
             const jumlah = document.getElementById('rsvpJumlah').value;
@@ -1359,12 +1350,10 @@
                     body: JSON.stringify(data)
                 });
 
-                // Tampilkan langsung di list ucapan
                 addWishToDOM(data);
 
                 btn.innerHTML = `<i class="fa-solid fa-check"></i> Terkirim`;
 
-                // Pop-up Konfirmasi Kirim ke WhatsApp Mempelai
                 if (confirm('Apakah Anda juga ingin mengirim pesan ini via WhatsApp?')) {
                     const waText = encodeURIComponent(
                         '*RSVP Pernikahan Fauzan & Ratna*\n\n' +
@@ -1376,7 +1365,6 @@
                     window.open('https://wa.me/' + WA_NUMBER + '?text=' + waText, '_blank');
                 }
 
-                // Reset form input
                 document.getElementById('rsvpNama').value = '';
                 document.getElementById('rsvpUcapan').value = '';
                 document.getElementById('rsvpJumlah').value = '1';
@@ -1467,6 +1455,16 @@
         }, flowerObserverOptions);
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Tahan scroll agar cover hanya bisa digeser secukupnya untuk menutup address bar
+            window.addEventListener('scroll', () => {
+                const cover = document.getElementById('cover-section');
+                if (cover && !cover.classList.contains('slide-up')) {
+                    if (window.scrollY > 30) {
+                        window.scrollTo({ top: 0, behavior: 'instant' });
+                    }
+                }
+            });
+
             loadWishes();
             window.scrollTo(0, 0);
 
