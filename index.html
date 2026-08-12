@@ -165,12 +165,11 @@
         /* ==================== HERO SECTION ==================== */
         .hero-page {
             position: relative; width: 100%; height: 100vh;
-            background-image: url('assets/bg-hero.webp'); background-size: 100% 100%; background-position: center;
+            background-image: url('assets/bg-hero.webp'); background-size: cover; background-position: center;
             z-index: 5; overflow: hidden; animation: bgBreathe 18s infinite alternate ease-in-out;
             will-change: transform, filter;
             -webkit-transform: translateZ(0);
             transform: translateZ(0);
-
         }
         @keyframes bgBreathe {
             0% { 
@@ -178,7 +177,7 @@
                 filter: brightness(1) contrast(1); 
             }
             50% { 
-                filter: brightness(1.2) contrast(1.08); /* Efek gemerlap/terang saat bernapas */
+                filter: brightness(1.2) contrast(1.08);
             }
             100% { 
                 transform: scale(1.08); 
@@ -316,7 +315,7 @@
         .profile-relation { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #2563EB; margin-bottom: 2px; }
         .profile-parents { font-size: 0.78rem; color: #1E3A8A; line-height: 1.4; font-weight: 500; margin-bottom: 10px; }
         .profile-ig-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 600; color: #1E3A8A; text-decoration: none; padding: 5px 12px; background: rgba(30, 58, 138, 0.08); border: 1px solid rgba(30, 58, 138, 0.25); border-radius: 20px; transition: all 0.3s ease; }
-        .profile-ig-link:hover { background: #1E3A8A; color: var(--white); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2); }
+        .profile-ig-link:hover { background: #1E3A8A; color: var(--white); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2); }
         .profile-ig-link i { font-size: 0.85rem; }
 
         /* ==================== SECTION COUNTDOWN TIMER ==================== */
@@ -1148,10 +1147,12 @@
                 window.scrollTo(0, 0);
             }, 100);
 
+            // Pembukaan Gapura dan Hero Utama
             setTimeout(() => { gapuraWrapper.classList.add('step-move-back'); }, 600);
             setTimeout(() => { curtainContainer.classList.add('open'); }, 1400);
             setTimeout(() => { gapuraWrapper.classList.add('zoom-in'); }, 2400);
 
+            // Animasi internal Hero Page (Siluet, Bunga, Bingkai Nama)
             setTimeout(() => {
                 heroPage.classList.add('step-siluet');
                 
@@ -1393,78 +1394,88 @@
             }
         });
 
-        // Intersection Observer
-        const observerOptions = { threshold: 0.15 };
-        const scrollObserver = new IntersectionObserver((entries) => {
+        // ================= SCROLL OBSERVER PER SECTION =================
+        const observerOptions = { 
+            root: null,
+            threshold: 0.25 
+        };
+
+        const scrollObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    if (entry.target.id === 'verseSection') {
+                    const id = entry.target.id;
+
+                    if (id === 'verseSection') {
                         entry.target.classList.add('show-frame');
-                        setTimeout(() => { entry.target.classList.add('show-text'); }, 700);
+                        setTimeout(() => { entry.target.classList.add('show-text'); }, 600);
                     }
-                    if (entry.target.id === 'profileSection') {
+                    else if (id === 'profileSection') {
                         document.getElementById('profileIntro').classList.add('show');
-                        setTimeout(() => { document.getElementById('groomCard').classList.add('show'); }, 500);
-                        setTimeout(() => { document.getElementById('profileAmpersand').classList.add('show'); }, 1100);
-                        setTimeout(() => { document.getElementById('brideCard').classList.add('show'); }, 1600);
+                        setTimeout(() => { document.getElementById('groomCard').classList.add('show'); }, 400);
+                        setTimeout(() => { document.getElementById('profileAmpersand').classList.add('show'); }, 900);
+                        setTimeout(() => { document.getElementById('brideCard').classList.add('show'); }, 1300);
                     }
-                    if (entry.target.id === 'timerSection') {
+                    else if (id === 'timerSection') {
                         entry.target.classList.add('show-header');
-                        setTimeout(() => { entry.target.classList.add('show-watch'); }, 500);
-                        setTimeout(() => { entry.target.classList.add('show-btn'); }, 1200);
+                        setTimeout(() => { entry.target.classList.add('show-watch'); }, 400);
+                        setTimeout(() => { entry.target.classList.add('show-btn'); }, 1000);
                     }
-                    if (entry.target.id === 'eventSection') {
+                    else if (id === 'eventSection') {
                         entry.target.classList.add('show-header');
-                        setTimeout(() => { document.getElementById('cardAkad').classList.add('show'); }, 400);
-                        setTimeout(() => { document.getElementById('cardResepsi').classList.add('show'); }, 900);
+                        setTimeout(() => { document.getElementById('cardAkad').classList.add('show'); }, 350);
+                        setTimeout(() => { document.getElementById('cardResepsi').classList.add('show'); }, 800);
                     }
-                    if (entry.target.id === 'storySection') {
+                    else if (id === 'storySection') {
                         entry.target.classList.add('show-header');
                         setTimeout(() => { document.getElementById('story1').classList.add('show'); }, 300);
-                        setTimeout(() => { document.getElementById('story2').classList.add('show'); }, 800);
-                        setTimeout(() => { document.getElementById('story3').classList.add('show'); }, 1300);
-                        setTimeout(() => { document.getElementById('story4').classList.add('show'); }, 1800);
+                        setTimeout(() => { document.getElementById('story2').classList.add('show'); }, 750);
+                        setTimeout(() => { document.getElementById('story3').classList.add('show'); }, 1200);
+                        setTimeout(() => { document.getElementById('story4').classList.add('show'); }, 1650);
                     }
-                    if (entry.target.id === 'gallerySection') {
+                    else if (id === 'gallerySection') {
                         entry.target.classList.add('show-header');
                         mulaiHujanSalju();
                         const galleryItems = document.querySelectorAll('.gallery-item');
                         galleryItems.forEach((item, index) => {
-                            setTimeout(() => { item.classList.add('show'); }, 300 + (index * 150));
+                            setTimeout(() => { item.classList.add('show'); }, 250 + (index * 120));
                         });
-                        setTimeout(() => { document.getElementById('streamCard').classList.add('show'); }, 300 + (galleryItems.length * 150) + 200);
+                        setTimeout(() => { document.getElementById('streamCard').classList.add('show'); }, 250 + (galleryItems.length * 120) + 200);
                     }
-                    if (entry.target.id === 'giftSection') {
+                    else if (id === 'giftSection') {
                         entry.target.classList.add('show-header');
-                        setTimeout(() => { entry.target.classList.add('show-main-card'); }, 400);
-                        setTimeout(() => { document.getElementById('giftCard1').classList.add('show'); }, 800);
-                        setTimeout(() => { document.getElementById('giftCard2').classList.add('show'); }, 1100);
-                        setTimeout(() => { document.getElementById('giftCard3').classList.add('show'); }, 1400);
-                        setTimeout(() => { document.getElementById('giftCard4').classList.add('show'); }, 1700);
+                        setTimeout(() => { entry.target.classList.add('show-main-card'); }, 350);
+                        setTimeout(() => { document.getElementById('giftCard1').classList.add('show'); }, 700);
+                        setTimeout(() => { document.getElementById('giftCard2').classList.add('show'); }, 1000);
+                        setTimeout(() => { document.getElementById('giftCard3').classList.add('show'); }, 1300);
+                        setTimeout(() => { document.getElementById('giftCard4').classList.add('show'); }, 1600);
                     }
-                    if (entry.target.id === 'rsvpSection') {
+                    else if (id === 'rsvpSection') {
                         entry.target.classList.add('show-header');
-                        setTimeout(() => { document.getElementById('rsvpCard').classList.add('show'); }, 400);
-                        setTimeout(() => { entry.target.classList.add('show-wishes'); }, 900);
+                        setTimeout(() => { document.getElementById('rsvpCard').classList.add('show'); }, 350);
+                        setTimeout(() => { entry.target.classList.add('show-wishes'); }, 800);
                     }
-                    if (entry.target.id === 'footerSection') {
+                    else if (id === 'footerSection') {
                         entry.target.classList.add('show');
                     }
+
+                    // unobserve agar animasi tidak diulang-ulang saat di-scroll naik turun
+                    observer.unobserve(entry.target);
                 }
             });
         }, observerOptions);
 
         const flowerObserverOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
-        const flowerObserver = new IntersectionObserver((entries) => {
+        const flowerObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('show-side');
+                    observer.unobserve(entry.target);
                 }
             });
         }, flowerObserverOptions);
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Tahan scroll agar cover hanya bisa digeser secukupnya untuk menutup address bar
+            // Tahan scroll agar cover tidak membocorkan isi sebelum tombol diklik
             window.addEventListener('scroll', () => {
                 const cover = document.getElementById('cover-section');
                 if (cover && !cover.classList.contains('slide-up')) {
@@ -1477,6 +1488,7 @@
             loadWishes();
             window.scrollTo(0, 0);
 
+            // Mendaftarkan observer ke setiap section di bawah hero
             const sections = [
                 'verseSection', 'profileSection', 'timerSection', 
                 'eventSection', 'storySection', 'gallerySection', 
