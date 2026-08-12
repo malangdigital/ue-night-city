@@ -26,14 +26,14 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Montserrat', sans-serif;
+        /* Mengizinkan halaman bisa digeser/swipe secara alami agar address bar mobile bisa naik */
+        html, body {
+            width: 100%;
+            min-height: 100%;
             background-color: #0f1115;
             color: var(--light-grey);
+            font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
-            overscroll-behavior-y: none;
-            /* Tambahkan tinggi minimum berbasis svh */
-            min-height: 100svh;
         }
 
         /* Container Pembungkus Layar HP */
@@ -41,7 +41,7 @@
             max-width: 480px;
             margin: 0 auto;
             position: relative;
-            min-height: 100svh;
+            min-height: 100vh;
             background-color: var(--dark-blue);
             box-shadow: 0 0 50px rgba(0,0,0,0.8);
             overflow: hidden;
@@ -88,10 +88,13 @@
 
         /* ==================== COVER SECTION ==================== */
         #cover-section {
-            /* Ubah dari absolute ke fixed agar menutupi layar penuh layaknya aplikasi */
-            position: fixed; 
-            top: 0; left: 0; width: 100%; 
-            height: 100svh; /* Menggunakan svh agar pas di layar mobile dan atasi address bar */
+            /* Menggunakan absolute dan min-height 100% agar halaman cover bisa di-swipe ke atas secara leluasa */
+            position: absolute; 
+            top: 0; left: 0; right: 0;
+            width: 100%; 
+            min-height: 100vh; 
+            max-width: 480px;
+            margin: 0 auto;
             background: linear-gradient(180deg, rgba(10, 25, 47, 0.4) 0%, rgba(10, 25, 47, 0.7) 100%), 
                         url('assets/bg-cover.webp') center/cover no-repeat;
             display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center;
@@ -1076,7 +1079,7 @@
     <script>
         // ================= KONFIGURASI SCRIPT =================
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbw2nm3MUmuHIW7Wc3l9WmWISQA-uB4SMXPSydOUd_ydcT-IsX1hGW1YERL49zK0b7Nbug/exec';
-        const WA_NUMBER = '6287123456789'; // Ganti dengan nomor WhatsApp Anda (format internasional tanpa tanda +)
+        const WA_NUMBER = '6287123456789'; 
         // =======================================================
 
         if (history.scrollRestoration) {
@@ -1084,7 +1087,6 @@
         }
         window.scrollTo(0, 0);
 
-        // 1. FITUR CUSTOM NAMA TAMU (?to=)
         const guestParam = new URLSearchParams(window.location.search).get('to');
         if (guestParam) {
             document.getElementById('guest-name').textContent = guestParam;
@@ -1129,7 +1131,6 @@
             });
 
             cover.classList.add('slide-up');
-            document.body.style.overflowY = 'auto';
 
             setTimeout(() => { gapuraWrapper.classList.add('step-move-back'); }, 600);
             setTimeout(() => { curtainContainer.classList.add('open'); }, 1400);
@@ -1250,9 +1251,6 @@
             });
         }
 
-        // ================= FITUR RSVP & GOOGLE SHEETS =================
-
-        // Otomatis set jumlah saat "Tidak Hadir" dipilih
         document.getElementById('rsvpKonfirmasi').addEventListener('change', function() {
             const jumlahSelect = document.getElementById('rsvpJumlah');
             if (this.value === 'Tidak Hadir') {
@@ -1264,7 +1262,6 @@
             }
         });
 
-        // Menampilkan ucapan ke dalam DOM
         function addWishToDOM(data) {
             const wishesList = document.getElementById('wishesList');
             const loadingText = wishesList.querySelector('p');
@@ -1276,7 +1273,6 @@
             const badgeClass = isHadir ? 'hadir' : 'absen';
             const statusText = isHadir ? 'Hadir' : 'Tidak Hadir';
 
-            // Fitur Balasan dari Mempelai (Kolom F di Sheet)
             const balasanHTML = data.balasan ? `
                 <div class="reply-box">
                     <div class="reply-title">
@@ -1300,7 +1296,6 @@
             wishesList.insertBefore(wishCard, wishesList.firstChild);
         }
 
-        // Load ucapan dari GAS (GET)
         async function loadWishes() {
             const wishesList = document.getElementById('wishesList');
             wishesList.innerHTML = "<p style='font-size: 0.8rem; color: #64748B; text-align: center; font-style: italic;'>Memuat ucapan...</p>";
@@ -1321,7 +1316,6 @@
             }
         }
 
-        // Submit RSVP (POST)
         document.getElementById('rsvpSubmit').addEventListener('click', async function() {
             const nama = document.getElementById('rsvpNama').value.trim();
             const jumlah = document.getElementById('rsvpJumlah').value;
@@ -1347,12 +1341,10 @@
                     body: JSON.stringify(data)
                 });
 
-                // Tampilkan langsung di list ucapan
                 addWishToDOM(data);
 
                 btn.innerHTML = `<i class="fa-solid fa-check"></i> Terkirim`;
 
-                // Pop-up Konfirmasi Kirim ke WhatsApp Mempelai
                 if (confirm('Apakah Anda juga ingin mengirim pesan ini via WhatsApp?')) {
                     const waText = encodeURIComponent(
                         '*RSVP Pernikahan Fauzan & Ratna*\n\n' +
@@ -1364,7 +1356,6 @@
                     window.open('https://wa.me/' + WA_NUMBER + '?text=' + waText, '_blank');
                 }
 
-                // Reset form input
                 document.getElementById('rsvpNama').value = '';
                 document.getElementById('rsvpUcapan').value = '';
                 document.getElementById('rsvpJumlah').value = '1';
@@ -1384,7 +1375,6 @@
             }
         });
 
-        // Intersection Observer
         const observerOptions = { threshold: 0.15 };
         const scrollObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -1455,7 +1445,6 @@
         }, flowerObserverOptions);
 
         document.addEventListener('DOMContentLoaded', () => {
-            document.body.style.overflowY = 'hidden';
             loadWishes();
             
             const sections = [
