@@ -26,17 +26,14 @@
             box-sizing: border-box;
         }
 
-        html, body {
-            width: 100%;
-            min-height: 100svh;
+        body {
+            font-family: 'Montserrat', sans-serif;
             background-color: #0f1115;
             color: var(--light-grey);
-            font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
-        }
-
-        body.locked {
-            overflow: hidden;
+            overscroll-behavior-y: none;
+            /* Tambahkan tinggi minimum berbasis svh */
+            min-height: 100svh;
         }
 
         /* Container Pembungkus Layar HP */
@@ -91,19 +88,15 @@
 
         /* ==================== COVER SECTION ==================== */
         #cover-section {
+            /* Ubah dari absolute ke fixed agar menutupi layar penuh layaknya aplikasi */
             position: fixed; 
-            inset: 0;
-            width: 100%; 
-            height: 100svh; 
-            max-width: 480px;
-            margin: 0 auto;
+            top: 0; left: 0; width: 100%; 
+            height: 100svh; /* Menggunakan svh agar pas di layar mobile dan atasi address bar */
             background: linear-gradient(180deg, rgba(10, 25, 47, 0.4) 0%, rgba(10, 25, 47, 0.7) 100%), 
                         url('assets/bg-cover.webp') center/cover no-repeat;
             display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center;
-            padding: 40px 20px 30px 20px; z-index: 999;
+            padding: 50px 20px 40px 20px; z-index: 999;
             transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1), opacity 1.2s ease;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
         }
         #cover-section.slide-up { 
             transform: translateY(-100%); 
@@ -112,29 +105,28 @@
         }
 
         .frame-oval {
-            width: 160px; height: 210px; border-radius: 50%;
+            width: 190px; height: 250px; border-radius: 50%;
             border: 2px solid rgba(230, 236, 245, 0.8);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0,0,0,0.3);
-            overflow: hidden; margin: 5px 0; background-color: rgba(255, 255, 255, 0.05);
-            flex-shrink: 0;
+            overflow: hidden; margin: 10px 0; background-color: rgba(255, 255, 255, 0.05);
         }
         .frame-oval img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 
-        .couple-names { margin: 2px 0; }
+        .couple-names { margin: 5px 0; }
         .name-groom, .name-bride {
-            font-family: 'Great Vibes', cursive; font-size: 2.8rem;
-            color: var(--white); text-shadow: 0 2px 10px rgba(0,0,0,0.5); line-height: 1;
+            font-family: 'Great Vibes', cursive; font-size: 3.2rem;
+            color: var(--white); text-shadow: 0 2px 10px rgba(0,0,0,0.5); line-height: 1.1;
         }
-        .ampersand { font-family: 'Great Vibes', cursive; font-size: 1.8rem; color: var(--light-grey); display: block; margin: -4px 0; }
+        .ampersand { font-family: 'Great Vibes', cursive; font-size: 2rem; color: var(--light-grey); display: block; margin: -5px 0; }
 
-        .cover-bottom { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0; }
-        .guest-label { font-size: 0.75rem; font-style: italic; color: var(--accent-blue); letter-spacing: 1px; }
-        .guest-name { font-size: 0.95rem; font-weight: 600; color: var(--white); margin-bottom: 2px; }
+        .cover-bottom { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .guest-label { font-size: 0.8rem; font-style: italic; color: var(--accent-blue); letter-spacing: 1px; }
+        .guest-name { font-size: 1rem; font-weight: 600; color: var(--white); margin-bottom: 5px; }
 
         .btn-open {
             display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-            padding: 10px 28px; background-color: var(--light-grey); color: var(--dark-blue);
-            border: none; border-radius: 30px; font-size: 0.8rem; font-weight: 600;
+            padding: 12px 32px; background-color: var(--light-grey); color: var(--dark-blue);
+            border: none; border-radius: 30px; font-size: 0.85rem; font-weight: 600;
             letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: all 0.3s ease;
         }
@@ -590,7 +582,7 @@
         }
     </style>
 </head>
-<body class="locked">
+<body>
 
     <audio id="bgMusic" loop preload="auto">
         <source src="assets/music.mp3" type="audio/mpeg">
@@ -1084,7 +1076,7 @@
     <script>
         // ================= KONFIGURASI SCRIPT =================
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbw2nm3MUmuHIW7Wc3l9WmWISQA-uB4SMXPSydOUd_ydcT-IsX1hGW1YERL49zK0b7Nbug/exec';
-        const WA_NUMBER = '6287123456789'; 
+        const WA_NUMBER = '6287123456789'; // Ganti dengan nomor WhatsApp Anda (format internasional tanpa tanda +)
         // =======================================================
 
         if (history.scrollRestoration) {
@@ -1092,6 +1084,7 @@
         }
         window.scrollTo(0, 0);
 
+        // 1. FITUR CUSTOM NAMA TAMU (?to=)
         const guestParam = new URLSearchParams(window.location.search).get('to');
         if (guestParam) {
             document.getElementById('guest-name').textContent = guestParam;
@@ -1135,10 +1128,8 @@
                 console.log("Autoplay ditahan browser:", err);
             });
 
-            // Lepas kuncian bodi agar halaman utama bisa di-scroll secara normal setelah tombol diklik
-            document.body.classList.remove('locked');
-
             cover.classList.add('slide-up');
+            document.body.style.overflowY = 'auto';
 
             setTimeout(() => { gapuraWrapper.classList.add('step-move-back'); }, 600);
             setTimeout(() => { curtainContainer.classList.add('open'); }, 1400);
@@ -1259,6 +1250,9 @@
             });
         }
 
+        // ================= FITUR RSVP & GOOGLE SHEETS =================
+
+        // Otomatis set jumlah saat "Tidak Hadir" dipilih
         document.getElementById('rsvpKonfirmasi').addEventListener('change', function() {
             const jumlahSelect = document.getElementById('rsvpJumlah');
             if (this.value === 'Tidak Hadir') {
@@ -1270,6 +1264,7 @@
             }
         });
 
+        // Menampilkan ucapan ke dalam DOM
         function addWishToDOM(data) {
             const wishesList = document.getElementById('wishesList');
             const loadingText = wishesList.querySelector('p');
@@ -1281,6 +1276,7 @@
             const badgeClass = isHadir ? 'hadir' : 'absen';
             const statusText = isHadir ? 'Hadir' : 'Tidak Hadir';
 
+            // Fitur Balasan dari Mempelai (Kolom F di Sheet)
             const balasanHTML = data.balasan ? `
                 <div class="reply-box">
                     <div class="reply-title">
@@ -1304,6 +1300,7 @@
             wishesList.insertBefore(wishCard, wishesList.firstChild);
         }
 
+        // Load ucapan dari GAS (GET)
         async function loadWishes() {
             const wishesList = document.getElementById('wishesList');
             wishesList.innerHTML = "<p style='font-size: 0.8rem; color: #64748B; text-align: center; font-style: italic;'>Memuat ucapan...</p>";
@@ -1324,6 +1321,7 @@
             }
         }
 
+        // Submit RSVP (POST)
         document.getElementById('rsvpSubmit').addEventListener('click', async function() {
             const nama = document.getElementById('rsvpNama').value.trim();
             const jumlah = document.getElementById('rsvpJumlah').value;
@@ -1349,10 +1347,12 @@
                     body: JSON.stringify(data)
                 });
 
+                // Tampilkan langsung di list ucapan
                 addWishToDOM(data);
 
                 btn.innerHTML = `<i class="fa-solid fa-check"></i> Terkirim`;
 
+                // Pop-up Konfirmasi Kirim ke WhatsApp Mempelai
                 if (confirm('Apakah Anda juga ingin mengirim pesan ini via WhatsApp?')) {
                     const waText = encodeURIComponent(
                         '*RSVP Pernikahan Fauzan & Ratna*\n\n' +
@@ -1364,6 +1364,7 @@
                     window.open('https://wa.me/' + WA_NUMBER + '?text=' + waText, '_blank');
                 }
 
+                // Reset form input
                 document.getElementById('rsvpNama').value = '';
                 document.getElementById('rsvpUcapan').value = '';
                 document.getElementById('rsvpJumlah').value = '1';
@@ -1383,6 +1384,7 @@
             }
         });
 
+        // Intersection Observer
         const observerOptions = { threshold: 0.15 };
         const scrollObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -1453,6 +1455,7 @@
         }, flowerObserverOptions);
 
         document.addEventListener('DOMContentLoaded', () => {
+            document.body.style.overflowY = 'hidden';
             loadWishes();
             
             const sections = [
